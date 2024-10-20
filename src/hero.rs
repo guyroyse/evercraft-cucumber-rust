@@ -5,12 +5,15 @@ use crate::Combatant;
 pub struct Hero {
   name: String,
   alignment: Alignment,
-  damage_taken: i16,
+  damage_taken: u16,
 }
 
 impl Combatant for Hero {
   fn armor_class(&self) -> u8 {
-    10
+    self.armor_class()
+  }
+  fn damage(&mut self, points: u8) {
+    self.damage(points)
   }
 }
 
@@ -39,16 +42,20 @@ impl Hero {
     self.alignment = alignment;
   }
 
-  pub fn hit_points(&self) -> i16 {
+  pub fn armor_class(&self) -> u8 {
+    10
+  }
+
+  pub fn hit_points(&self) -> u16 {
     5
   }
 
-  pub fn current_hit_points(&self) -> i16 {
-    self.hit_points() - self.damage_taken
+  pub fn current_hit_points(&self) -> u16 {
+    if self.damage_taken > self.hit_points() { 0 } else { self.hit_points() - self.damage_taken }
   }
 
   pub fn damage(&mut self, points: u8) {
-    self.damage_taken += points as i16;
+    self.damage_taken += points as u16;
   }
 
   pub fn alive(&self) -> bool {

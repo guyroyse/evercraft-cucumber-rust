@@ -17,10 +17,10 @@ impl FromStr for Alignment {
   type Err = ();
 
   fn from_str(s: &str) -> Result<Self, Self::Err> {
-    match s {
-      "Good" => Ok(Alignment::Good),
-      "Neutral" => Ok(Alignment::Neutral),
-      "Evil" => Ok(Alignment::Evil),
+    match s.to_lowercase().as_str() {
+      "good" => Ok(Alignment::Good),
+      "neutral" => Ok(Alignment::Neutral),
+      "evil" => Ok(Alignment::Evil),
       _ => Err(()),
     }
   }

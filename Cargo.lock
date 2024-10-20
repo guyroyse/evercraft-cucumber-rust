@@ -324,7 +324,6 @@ name = "evercraft"
 version = "0.1.0"
 dependencies = [
  "cucumber",
- "futures",
  "tokio",
 ]
 

@@ -25,13 +25,13 @@ Feature: Hero
 
   Scenario Outline: Damaging a hero
     When the hero takes <pts> points of damage
-    Then the hero's hit points are 5
-    And the hero's current hit points are <hp>
+    Then the hero's hit points are <hp>
+    And the hero's current hit points are <current_hp>
     And the hero is <status>
 
     Examples:
-      | pts | hp | status |
-      |  1  |  4 |  alive |
-      |  3  |  2 |  alive |
-      |  5  |  0 |   dead |
-      |  6  | -1 |   dead |
+      | pts | hp | current_hp | status |
+      |  1  |  5 |     4      |  alive |
+      |  3  |  5 |     2      |  alive |
+      |  5  |  5 |     0      |  dead  |
+      |  7  |  5 |     0      |  dead  |

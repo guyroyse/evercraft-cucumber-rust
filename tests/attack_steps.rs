@@ -2,57 +2,74 @@ use cucumber::{ given, when, then, World };
 use evercraft::*;
 
 #[derive(Debug)]
-struct MockCombatant {
+struct MyMockCombatant {
   armor_class: u8,
+  last_damage_received: u8,
 }
 
-impl Combatant for MockCombatant {
+impl MyMockCombatant {
+  fn new() -> Self {
+    MyMockCombatant {
+      armor_class: 10,
+      last_damage_received: 0,
+    }
+  }
+
+  fn set_armor_class(&mut self, ac: u8) {
+    self.armor_class = ac;
+  }
+
+  fn last_damage_received(&self) -> u8 {
+    self.last_damage_received
+  }
+}
+
+impl Combatant for MyMockCombatant {
   fn armor_class(&self) -> u8 {
     self.armor_class
+  }
+
+  fn damage(&mut self, points: u8) {
+    self.last_damage_received = points;
   }
 }
 
 #[derive(World, Debug, Default)]
 pub struct AttackWorld {
-  attacker: Option<Box<dyn Combatant>>,
-  defender: Option<Box<dyn Combatant>>,
-  attack_result: bool,
-}
-
-fn maybe_attacker(world: &AttackWorld) -> &Box<dyn Combatant> {
-  match world.attacker {
-    Some(ref attacker) => attacker,
-    None => panic!("Attacker is not initialized"),
-  }
-}
-
-fn maybe_defender(world: &AttackWorld) -> &Box<dyn Combatant> {
-  match world.defender {
-    Some(ref defender) => defender,
-    None => panic!("Defender is not initialized"),
-  }
+  attacker: Option<MyMockCombatant>,
+  defender: Option<MyMockCombatant>,
+  attack_result: Option<AttackResult>,
 }
 
 #[given("an attacker")]
 pub fn new_attacker(world: &mut AttackWorld) {
-  world.attacker = Some(Box::new(Hero::new()));
+  let attacker = MyMockCombatant::new();
+  world.attacker = Some(attacker);
 }
 
 #[given(regex = r"^a defender with an armor class of (\d+)$")]
-pub fn new_defender(world: &mut AttackWorld, score: u8) {
-  world.defender = Some(Box::new(MockCombatant { armor_class: score }));
+pub fn new_defender(world: &mut AttackWorld, ac: u8) {
+  let mut defender = MyMockCombatant::new();
+  defender.set_armor_class(ac);
+  world.defender = Some(defender);
 }
 
 #[when(regex = r"^the attacker attacks with a roll of (\d+)$")]
 pub fn attack(world: &mut AttackWorld, roll: u8) {
-  let attacker = maybe_attacker(world);
-  let defender = maybe_defender(world);
+  let attacker: &mut dyn Combatant = world.attacker.as_mut().unwrap();
+  let defender: &mut dyn Combatant = world.defender.as_mut().unwrap();
+
   let attack = Attack::new();
-  world.attack_result = attack.attack(attacker, defender, roll);
+  world.attack_result = Some(attack.attack(attacker, defender, roll));
 }
 
-#[then(expr = "the attack is a {string}")]
-pub fn attack_result(world: &mut AttackWorld, result: String) {
-  let expected_result = result == "hit";
-  assert_eq!(world.attack_result, expected_result);
+#[then(regex = r"^the attack is a (hit|miss|crit)$")]
+pub fn attack_result(world: &mut AttackWorld, result: AttackResult) {
+  assert_eq!(world.attack_result.unwrap(), result);
+}
+
+#[then(regex = r"^the defender is damaged for (\d+) points?$")]
+pub fn defender_hit_points(world: &mut AttackWorld, damage: u8) {
+  let defender = world.defender.as_mut().unwrap();
+  assert_eq!(defender.last_damage_received(), damage);
 }

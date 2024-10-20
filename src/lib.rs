@@ -1,11 +1,13 @@
 mod ability;
 mod alignment;
 mod attack;
+mod error;
 mod combatant;
 mod hero;
 
-pub use ability::Ability;
-pub use alignment::Alignment;
-pub use attack::Attack;
-pub use combatant::Combatant;
-pub use hero::Hero;
+pub use ability::*;
+pub use alignment::*;
+pub use attack::*;
+pub use combatant::*;
+pub use error::*;
+pub use hero::*;

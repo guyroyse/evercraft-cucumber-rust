@@ -1,3 +1,5 @@
+use crate::error::AbilityOutOfRangeError;
+
 #[derive(Debug)]
 pub struct Ability {
   score: u8,
@@ -14,8 +16,13 @@ impl Ability {
     self.score
   }
 
-  pub fn set_score(&mut self, score: u8) {
-    self.score = score;
+  pub fn set_score(&mut self, score: u8) -> Result<(), AbilityOutOfRangeError> {
+    if score < 1 || score > 20 {
+      Err(AbilityOutOfRangeError::new(score))
+    } else {
+      self.score = score;
+      Ok(())
+    }
   }
 
   pub fn modifier(&self) -> i8 {

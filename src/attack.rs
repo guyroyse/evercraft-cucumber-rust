@@ -30,15 +30,15 @@ impl Attack {
 
   pub fn attack(
     &self,
-    _attacker: &mut dyn Combatant,
+    attacker: &mut dyn Combatant,
     defender: &mut dyn Combatant,
     roll: u8
   ) -> AttackResult {
     if roll == 20 {
-      defender.damage(2);
+      defender.damage(attacker.crit_damage());
       AttackResult::Crit
     } else if roll >= defender.armor_class() {
-      defender.damage(1);
+      defender.damage(attacker.attack_damage());
       AttackResult::Hit
     } else {
       AttackResult::Miss

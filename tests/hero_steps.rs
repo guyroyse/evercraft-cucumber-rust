@@ -28,27 +28,42 @@ pub fn take_damage(world: &mut HeroWorld, points: u8) {
 
 #[then(regex = r"^the hero has no name$")]
 pub fn name_is_empty(world: &mut HeroWorld) {
-  assert_eq!(world.hero.as_mut().unwrap().name(), "");
+  assert_eq!(world.hero.as_ref().unwrap().name(), "");
 }
 
 #[then(regex = r"^the hero's name is (.+)$")]
 pub fn name_is(world: &mut HeroWorld, name: String) {
-  assert_eq!(world.hero.as_mut().unwrap().name(), name);
+  assert_eq!(world.hero.as_ref().unwrap().name(), name);
 }
 
 #[then(regex = r"^the hero's alignment is (Good|Neutral|Evil)$")]
 pub fn alignment_is(world: &mut HeroWorld, alignment: Alignment) {
-  assert_eq!(world.hero.as_mut().unwrap().alignment(), alignment);
+  assert_eq!(world.hero.as_ref().unwrap().alignment(), alignment);
 }
 
 #[then(regex = r"^the hero's armor class is (\d+)$")]
 pub fn armor_class_is(world: &mut HeroWorld, armor_class: u8) {
-  assert_eq!(world.hero.as_mut().unwrap().armor_class(), armor_class);
+  assert_eq!(world.hero.as_ref().unwrap().armor_class(), armor_class);
 }
 
 #[then(regex = r"^the hero's hit points are (\d+)$")]
 pub fn hit_points_are(world: &mut HeroWorld, hit_points: u16) {
-  assert_eq!(world.hero.as_mut().unwrap().hit_points(), hit_points);
+  assert_eq!(world.hero.as_ref().unwrap().hit_points(), hit_points);
+}
+
+#[then(regex = r"^the hero's attack modifier is ([+-]?\d+)$")]
+pub fn attack_modifier_is(world: &mut HeroWorld, modifier: i8) {
+  assert_eq!(world.hero.as_ref().unwrap().attack_modifier(), modifier);
+}
+
+#[then(regex = r"^the hero's attack damage is ([+]?\d+)$")]
+pub fn attack_damage_is(world: &mut HeroWorld, damage: u8) {
+  assert_eq!(world.hero.as_ref().unwrap().attack_damage(), damage);
+}
+
+#[then(regex = r"^the hero's crit damage is ([+]?\d+)$")]
+pub fn crit_damage_is(world: &mut HeroWorld, damage: u8) {
+  assert_eq!(world.hero.as_ref().unwrap().crit_damage(), damage);
 }
 
 #[then(regex = r"^the hero's current hit points are (\d+)$")]

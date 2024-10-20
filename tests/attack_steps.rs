@@ -2,16 +2,20 @@ use cucumber::{ given, when, then, World };
 use evercraft::*;
 
 #[derive(Debug)]
-struct MyMockCombatant {
+struct MockCombatant {
   armor_class: u8,
+  attack_damage: u8,
+  crit_damage: u8,
   last_damage_received: u8,
 }
 
-impl MyMockCombatant {
+impl MockCombatant {
   fn new() -> Self {
-    MyMockCombatant {
+    MockCombatant {
       armor_class: 10,
       last_damage_received: 0,
+      attack_damage: 1,
+      crit_damage: 2,
     }
   }
 
@@ -19,12 +23,20 @@ impl MyMockCombatant {
     self.armor_class = ac;
   }
 
+  fn set_attack_damage(&mut self, damage: u8) {
+    self.attack_damage = damage;
+  }
+
+  fn set_crit_damage(&mut self, damage: u8) {
+    self.crit_damage = damage;
+  }
+
   fn last_damage_received(&self) -> u8 {
     self.last_damage_received
   }
 }
 
-impl Combatant for MyMockCombatant {
+impl Combatant for MockCombatant {
   fn armor_class(&self) -> u8 {
     self.armor_class
   }
@@ -32,24 +44,34 @@ impl Combatant for MyMockCombatant {
   fn damage(&mut self, points: u8) {
     self.last_damage_received = points;
   }
+
+  fn attack_damage(&self) -> u8 {
+    self.attack_damage
+  }
+
+  fn crit_damage(&self) -> u8 {
+    self.crit_damage
+  }
 }
 
 #[derive(World, Debug, Default)]
 pub struct AttackWorld {
-  attacker: Option<MyMockCombatant>,
-  defender: Option<MyMockCombatant>,
+  attacker: Option<MockCombatant>,
+  defender: Option<MockCombatant>,
   attack_result: Option<AttackResult>,
 }
 
-#[given("an attacker")]
-pub fn new_attacker(world: &mut AttackWorld) {
-  let attacker = MyMockCombatant::new();
+#[given(regex = r"^an attacker with an attack damage of (\d+) and a crit damage of (\d+)$")]
+pub fn new_attacker(world: &mut AttackWorld, attack_damage: u8, crit_damage: u8) {
+  let mut attacker = MockCombatant::new();
+  attacker.set_attack_damage(attack_damage);
+  attacker.set_crit_damage(crit_damage);
   world.attacker = Some(attacker);
 }
 
 #[given(regex = r"^a defender with an armor class of (\d+)$")]
 pub fn new_defender(world: &mut AttackWorld, ac: u8) {
-  let mut defender = MyMockCombatant::new();
+  let mut defender = MockCombatant::new();
   defender.set_armor_class(ac);
   world.defender = Some(defender);
 }

@@ -1,8 +1,10 @@
 Feature: Attack
 
-  Scenario Outline: A combatant attacks another combatant
-    Given an attacker
-    And a defender with an armor class of <ac>
+  Background:
+    Given an attacker with an attack damage of 2 and a crit damage of 4
+
+  Scenario Outline: An attacker attacks a defender
+    Given a defender with an armor class of <ac>
     When the attacker attacks with a roll of <roll>
     Then the attack is a <result>
 
@@ -14,17 +16,14 @@ Feature: Attack
       | 15 |  20  |  crit  |
       | 25 |  20  |  crit  |
 
-  Scenario: A combatant hits another combatant
-    Given an attacker
-    And a defender with an armor class of 10
+  Scenario: An attacker hits a defender
+    Given a defender with an armor class of 10
     When the attacker attacks with a roll of 15
     Then the attack is a hit
-    And the defender is damaged for 1 point
+    And the defender is damaged for 2 point
 
-  Scenario: A combatant crits another combatant
-    Given an attacker
-    And a defender with an armor class of 10
+  Scenario: An attacker crits a defender
+    Given a defender with an armor class of 10
     When the attacker attacks with a roll of 20
     Then the attack is a crit
-    And the defender is damaged for 2 points
-
+    And the defender is damaged for 4 points

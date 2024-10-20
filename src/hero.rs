@@ -12,8 +12,17 @@ impl Combatant for Hero {
   fn armor_class(&self) -> u8 {
     self.armor_class()
   }
+
   fn damage(&mut self, points: u8) {
     self.damage(points)
+  }
+
+  fn attack_damage(&self) -> u8 {
+    self.attack_damage()
+  }
+
+  fn crit_damage(&self) -> u8 {
+    self.crit_damage()
   }
 }
 
@@ -44,6 +53,18 @@ impl Hero {
 
   pub fn armor_class(&self) -> u8 {
     10
+  }
+
+  pub fn attack_modifier(&self) -> i8 {
+    0
+  }
+
+  pub fn attack_damage(&self) -> u8 {
+    1
+  }
+
+  pub fn crit_damage(&self) -> u8 {
+    2
   }
 
   pub fn hit_points(&self) -> u16 {

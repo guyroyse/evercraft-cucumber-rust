@@ -5,9 +5,12 @@ Feature: Hero
 
   Scenario: A hero has default values
     Then the hero has no name
-    Then the hero's alignment is Neutral
-    Then the hero's armor class is 10
-    Then the hero's hit points are 5
+    And the hero's alignment is Neutral
+    And the hero's armor class is 10
+    And the hero's hit points are 5
+    And the hero's attack modifier is 0
+    And the hero's attack damage is 1
+    And the hero's crit damage is 2
 
   Scenario: Changing a hero's name
     When the hero's name is set to Bob
